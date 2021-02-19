@@ -1,22 +1,21 @@
 package jdbc;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Main {
-    private static final String DB_USER = "dbuser";
-    private static final String DB_PASSWORD = "dbpassword";
-    private static final String CONN_STRING = "" +
-            "jdbc:mysql://localhost/explorecalifornia";
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args){
         Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs =  null;
 
         try{
-            conn = DriverManager.getConnection(CONN_STRING, DB_USER, DB_PASSWORD);
-            System.out.println("Connected!");
+            conn = DBUtil.getConnection(DBType.HSQLDB);
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = stmt.executeQuery("SELECT * FROM states");
+
+            rs.last();
+            System.out.println("number of rows : " + rs.getRow());
         } catch (SQLException e){
             System.err.println(e);
         }
